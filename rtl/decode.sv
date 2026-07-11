@@ -74,6 +74,62 @@ module decode (
           decode_out_t.invalid = 1;
         end
       end
+      7'b0010011: begin
+        logic [ 4:0] rs1;
+        logic [11:0] imm;
+        logic [ 2:0] funct3;
+        logic [ 4:0] rd;
+
+        rs1 = instr[19:15];
+        imm = instr[31:20];
+        funct3 = instr[14:12];
+        rd = instr[11:7];
+
+        reg_rs1_addr = rs1;
+        decode_out_t.op_src_b = OP_SRC_T_IMM;
+        decode_out_t.rs1_data = reg_rs1_data;
+        decode_out_t.rd_addr = rd;
+
+        if (funct3 == 3'h0) begin
+          decode_out_t.op = ALU_ADD;
+          decode_out_t.reg_we = 1'b1;
+          decode_out_t.imm = signed'(imm);
+        end else if (funct3 == 3'h4) begin
+          decode_out_t.op = ALU_XOR;
+          decode_out_t.reg_we = 1'b1;
+          decode_out_t.imm = signed'(imm);
+        end else if (funct3 == 3'h6) begin
+          decode_out_t.op = ALU_OR;
+          decode_out_t.reg_we = 1'b1;
+          decode_out_t.imm = signed'(imm);
+        end else if (funct3 == 3'h7) begin
+          decode_out_t.op = ALU_AND;
+          decode_out_t.reg_we = 1'b1;
+          decode_out_t.imm = signed'(imm);
+        end else if (funct3 == 3'h1 && imm[11:5] == 7'h00) begin
+          decode_out_t.op = ALU_SLL;
+          decode_out_t.reg_we = 1'b1;
+          decode_out_t.imm = imm[4:0];
+        end else if (funct3 == 3'h5 && imm[11:5] == 7'h00) begin
+          decode_out_t.op = ALU_SRL;
+          decode_out_t.reg_we = 1'b1;
+          decode_out_t.imm = imm[4:0];
+        end else if (funct3 == 3'h5 && imm[11:5] == 7'h20) begin
+          decode_out_t.op = ALU_SRA;
+          decode_out_t.reg_we = 1'b1;
+          decode_out_t.imm = imm[4:0];
+        end else if (funct3 == 3'h2) begin
+          decode_out_t.op = ALU_SLT;
+          decode_out_t.reg_we = 1'b1;
+          decode_out_t.imm = signed'(imm);
+        end else if (funct3 == 3'h3) begin
+          decode_out_t.op = ALU_SLTU;
+          decode_out_t.reg_we = 1'b1;
+          decode_out_t.imm = signed'(imm);
+        end else begin
+          decode_out_t.invalid = 1;
+        end
+      end
       default: begin
         decode_out_t.invalid = 1;
       end

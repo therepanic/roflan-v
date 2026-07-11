@@ -11,17 +11,7 @@ package decode_pkg;
     ALU_SRL,
     ALU_SRA,
     ALU_SLT,
-    ALU_SLTU,
-    ALU_ADD_I,
-    ALU_SUB_I,
-    ALU_XOR_I,
-    ALU_OR_I,
-    ALU_AND_I,
-    ALU_SLL_I,
-    ALU_SRL_I,
-    ALU_SRA_I,
-    ALU_SLT_I,
-    ALU_SLTU_I
+    ALU_SLTU
   } op_e;
 
   typedef enum logic [2:0] {
@@ -35,7 +25,7 @@ package decode_pkg;
     logic [31:0] rs1_data;
     logic [31:0] rs2_data;
     logic [4:0] rd_addr;
-    logic [19:0] imm;
+    logic signed [31:0] imm;
     logic reg_we;
     logic mem_re;
     logic mem_we;
