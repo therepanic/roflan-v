@@ -11,7 +11,16 @@ package decode_pkg;
     ALU_SRL,
     ALU_SRA,
     ALU_SLT,
-    ALU_SLTU
+    ALU_SLTU,
+
+    LSU_LOAD_BYTE,
+    LSU_LOAD_HALF,
+    LSU_LOAD_WORD,
+    LSU_LOAD_BYTE_U,
+    LSU_LOAD_HALF_U,
+    LSU_STORE_BYTE,
+    LSU_STORE_HALF,
+    LSU_STORE_WORD
   } op_e;
 
   typedef enum logic [2:0] {

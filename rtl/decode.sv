@@ -20,6 +20,7 @@ module decode (
     reg_rs1_addr = '0;
     reg_rs2_addr = '0;
     case (op)
+      // Type R
       7'b0110011: begin
         logic [4:0] rs1;
         logic [4:0] rs2;
@@ -74,6 +75,7 @@ module decode (
           decode_out_t.invalid = 1;
         end
       end
+      // Type I
       7'b0010011: begin
         logic [ 4:0] rs1;
         logic [11:0] imm;
@@ -126,6 +128,82 @@ module decode (
           decode_out_t.op = ALU_SLTU;
           decode_out_t.reg_we = 1'b1;
           decode_out_t.imm = signed'(imm);
+        end else begin
+          decode_out_t.invalid = 1;
+        end
+      end
+      // Type I
+      7'b0000011: begin
+        logic [ 4:0] rs1;
+        logic [11:0] imm;
+        logic [ 2:0] funct3;
+        logic [ 4:0] rd;
+
+        rs1 = instr[19:15];
+        imm = instr[31:20];
+        funct3 = instr[14:12];
+        rd = instr[11:7];
+
+        reg_rs1_addr = rs1;
+        decode_out_t.op_src_b = OP_SRC_T_IMM;
+        decode_out_t.rs1_data = reg_rs1_data;
+        decode_out_t.rd_addr = rd;
+        decode_out_t.imm = signed'(imm);
+        if (funct3 == 3'h0) begin
+          decode_out_t.op = LSU_LOAD_BYTE;
+          decode_out_t.mem_re = 1'b1;
+          decode_out_t.reg_we = 1'b1;
+        end else if (funct3 == 3'h1) begin
+          decode_out_t.op = LSU_LOAD_HALF;
+          decode_out_t.mem_re = 1'b1;
+          decode_out_t.reg_we = 1'b1;
+        end else if (funct3 == 3'h2) begin
+          decode_out_t.op = LSU_LOAD_WORD;
+          decode_out_t.mem_re = 1'b1;
+          decode_out_t.reg_we = 1'b1;
+        end else if (funct3 == 3'h4) begin
+          decode_out_t.op = LSU_LOAD_BYTE_U;
+          decode_out_t.mem_re = 1'b1;
+          decode_out_t.reg_we = 1'b1;
+        end else if (funct3 == 3'h5) begin
+          decode_out_t.op = LSU_LOAD_HALF_U;
+          decode_out_t.mem_re = 1'b1;
+          decode_out_t.reg_we = 1'b1;
+        end else begin
+          decode_out_t.invalid = 1;
+        end
+      end
+      // Type S
+      7'b0100011: begin
+        logic [ 2:0] funct3;
+        logic [ 4:0] rs1;
+        logic [ 4:0] rs2;
+
+        logic [31:0] imm;
+        imm[4:0] = instr[11:7];
+        imm[11:5] = instr[31:25];
+        imm[31:12] = signed'(instr[31]);
+
+        funct3 = instr[14:12];
+        rs1 = instr[19:15];
+        rs2 = instr[24:20];
+
+        reg_rs1_addr = rs1;
+        reg_rs2_addr = rs2;
+        decode_out_t.op_src_b = OP_SRC_T_IMM;
+        decode_out_t.rs1_data = reg_rs1_data;
+        decode_out_t.rs2_data = reg_rs2_data;
+        decode_out_t.imm = imm;
+
+        if (funct3 == 3'h0) begin
+          decode_out_t.op = LSU_STORE_BYTE;
+          decode_out_t.mem_we = 1'b1;
+        end else if (funct3 == 3'h1) begin
+          decode_out_t.op = LSU_STORE_HALF;
+          decode_out_t.mem_we = 1'b1;
+        end else if (funct3 == 3'h2) begin
+          decode_out_t.op = LSU_STORE_WORD;
+          decode_out_t.mem_we = 1'b1;
         end else begin
           decode_out_t.invalid = 1;
         end
