@@ -20,7 +20,23 @@ package decode_pkg;
     LSU_LOAD_HALF_U,
     LSU_STORE_BYTE,
     LSU_STORE_HALF,
-    LSU_STORE_WORD
+    LSU_STORE_WORD,
+
+    BRANCH_EQ,
+    BRANCH_NE,
+    BRANCH_LT,
+    BRANCH_GE,
+    BRANCH_LTU,
+    BRANCH_GEU,
+
+    JAL,
+    JAL_R,
+
+    LUI,
+    AUIP,
+
+    ENV_CALL,
+    ENV_BREAK
   } op_e;
 
   typedef enum logic [2:0] {

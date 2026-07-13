@@ -1,0 +1,7 @@
+{
+  "verilog.linting.linter": "verilator",
+  "verilog.linting.verilator.useWSL": true,
+  "verilog.linting.verilator.arguments": "-Wall",
+
+  "verilog.ctags.enabled": false
+}
