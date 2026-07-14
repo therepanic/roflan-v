@@ -2,17 +2,6 @@ package decode_pkg;
 
   // make more cooler
   typedef enum logic [4:0] {
-    ALU_ADD,
-    ALU_SUB,
-    ALU_XOR,
-    ALU_OR,
-    ALU_AND,
-    ALU_SLL,
-    ALU_SRL,
-    ALU_SRA,
-    ALU_SLT,
-    ALU_SLTU,
-
     LSU_LOAD_BYTE,
     LSU_LOAD_HALF,
     LSU_LOAD_WORD,
@@ -39,6 +28,19 @@ package decode_pkg;
     ENV_BREAK
   } op_e;
 
+  typedef enum logic [3:0] {
+    ALU_ADD,
+    ALU_SUB,
+    ALU_XOR,
+    ALU_OR,
+    ALU_AND,
+    ALU_SLL,
+    ALU_SRL,
+    ALU_SRA,
+    ALU_SLT,
+    ALU_SLTU
+  } alu_op_e;
+
   typedef enum logic [2:0] {
     OP_SRC_T_REG,
     OP_SRC_T_IMM
@@ -46,6 +48,7 @@ package decode_pkg;
 
   typedef struct packed {
     op_e op;
+    alu_op_e alu_op;
     op_src_t_e op_src_b;
     logic [31:0] rs1_data;
     logic [31:0] rs2_data;

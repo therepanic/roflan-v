@@ -42,34 +42,34 @@ module decode (
         decode_out_t.rd_addr = rd;
 
         if (funct3 == 3'h0 && funct7 == 7'h00) begin
-          decode_out_t.op = ALU_ADD;
+          decode_out_t.alu_op = ALU_ADD;
           decode_out_t.reg_we = 1'b1;
         end else if (funct3 == 3'h0 && funct7 == 7'h20) begin
-          decode_out_t.op = ALU_SUB;
+          decode_out_t.alu_op = ALU_SUB;
           decode_out_t.reg_we = 1'b1;
         end else if (funct3 == 3'h4 && funct7 == 7'h00) begin
-          decode_out_t.op = ALU_XOR;
+          decode_out_t.alu_op = ALU_XOR;
           decode_out_t.reg_we = 1'b1;
         end else if (funct3 == 3'h6 && funct7 == 7'h00) begin
-          decode_out_t.op = ALU_OR;
+          decode_out_t.alu_op = ALU_OR;
           decode_out_t.reg_we = 1'b1;
         end else if (funct3 == 3'h7 && funct7 == 7'h00) begin
-          decode_out_t.op = ALU_AND;
+          decode_out_t.alu_op = ALU_AND;
           decode_out_t.reg_we = 1'b1;
         end else if (funct3 == 3'h1 && funct7 == 7'h00) begin
-          decode_out_t.op = ALU_SLL;
+          decode_out_t.alu_op = ALU_SLL;
           decode_out_t.reg_we = 1'b1;
         end else if (funct3 == 3'h5 && funct7 == 7'h00) begin
-          decode_out_t.op = ALU_SRL;
+          decode_out_t.alu_op = ALU_SRL;
           decode_out_t.reg_we = 1'b1;
         end else if (funct3 == 3'h5 && funct7 == 7'h20) begin
-          decode_out_t.op = ALU_SRA;
+          decode_out_t.alu_op = ALU_SRA;
           decode_out_t.reg_we = 1'b1;
         end else if (funct3 == 3'h2 && funct7 == 7'h00) begin
-          decode_out_t.op = ALU_SLT;
+          decode_out_t.alu_op = ALU_SLT;
           decode_out_t.reg_we = 1'b1;
         end else if (funct3 == 3'h3 && funct7 == 7'h00) begin
-          decode_out_t.op = ALU_SLTU;
+          decode_out_t.alu_op = ALU_SLTU;
           decode_out_t.reg_we = 1'b1;
         end else begin
           decode_out_t.invalid = 1;
@@ -93,39 +93,39 @@ module decode (
         decode_out_t.rd_addr = rd;
 
         if (funct3 == 3'h0) begin
-          decode_out_t.op = ALU_ADD;
+          decode_out_t.alu_op = ALU_ADD;
           decode_out_t.reg_we = 1'b1;
           decode_out_t.imm = signed'(imm);
         end else if (funct3 == 3'h4) begin
-          decode_out_t.op = ALU_XOR;
+          decode_out_t.alu_op = ALU_XOR;
           decode_out_t.reg_we = 1'b1;
           decode_out_t.imm = signed'(imm);
         end else if (funct3 == 3'h6) begin
-          decode_out_t.op = ALU_OR;
+          decode_out_t.alu_op = ALU_OR;
           decode_out_t.reg_we = 1'b1;
           decode_out_t.imm = signed'(imm);
         end else if (funct3 == 3'h7) begin
-          decode_out_t.op = ALU_AND;
+          decode_out_t.alu_op = ALU_AND;
           decode_out_t.reg_we = 1'b1;
           decode_out_t.imm = signed'(imm);
         end else if (funct3 == 3'h1 && imm[11:5] == 7'h00) begin
-          decode_out_t.op = ALU_SLL;
+          decode_out_t.alu_op = ALU_SLL;
           decode_out_t.reg_we = 1'b1;
           decode_out_t.imm = imm[4:0];
         end else if (funct3 == 3'h5 && imm[11:5] == 7'h00) begin
-          decode_out_t.op = ALU_SRL;
+          decode_out_t.alu_op = ALU_SRL;
           decode_out_t.reg_we = 1'b1;
           decode_out_t.imm = imm[4:0];
         end else if (funct3 == 3'h5 && imm[11:5] == 7'h20) begin
-          decode_out_t.op = ALU_SRA;
+          decode_out_t.alu_op = ALU_SRA;
           decode_out_t.reg_we = 1'b1;
           decode_out_t.imm = imm[4:0];
         end else if (funct3 == 3'h2) begin
-          decode_out_t.op = ALU_SLT;
+          decode_out_t.alu_op = ALU_SLT;
           decode_out_t.reg_we = 1'b1;
           decode_out_t.imm = signed'(imm);
         end else if (funct3 == 3'h3) begin
-          decode_out_t.op = ALU_SLTU;
+          decode_out_t.alu_op = ALU_SLTU;
           decode_out_t.reg_we = 1'b1;
           decode_out_t.imm = signed'(imm);
         end else begin
