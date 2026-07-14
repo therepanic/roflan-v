@@ -11,22 +11,23 @@ package decode_pkg;
     LSU_STORE_HALF,
     LSU_STORE_WORD,
 
-    BRANCH_EQ,
-    BRANCH_NE,
-    BRANCH_LT,
-    BRANCH_GE,
-    BRANCH_LTU,
-    BRANCH_GEU,
-
-    JAL,
-    JAL_R,
-
     LUI,
     AUIP,
 
     ENV_CALL,
     ENV_BREAK
   } op_e;
+
+  typedef enum logic [2:0] {
+    BRANCH_EQ,
+    BRANCH_NE,
+    BRANCH_LT,
+    BRANCH_GE,
+    BRANCH_LTU,
+    BRANCH_GEU,
+    JAL,
+    JAL_R
+  } branch_op_e;
 
   typedef enum logic [3:0] {
     ALU_ADD,
@@ -49,6 +50,7 @@ package decode_pkg;
   typedef struct packed {
     op_e op;
     alu_op_e alu_op;
+    branch_op_e branch_op;
     op_src_t_e op_src_b;
     logic [31:0] rs1_data;
     logic [31:0] rs2_data;

@@ -234,17 +234,17 @@ module decode (
         decode_out_t.imm = imm;
 
         if (funct3 == 3'h0) begin
-          decode_out_t.op = BRANCH_EQ;
+          decode_out_t.branch_op = BRANCH_EQ;
         end else if (funct3 == 3'h1) begin
-          decode_out_t.op = BRANCH_NE;
+          decode_out_t.branch_op = BRANCH_NE;
         end else if (funct3 == 3'h4) begin
-          decode_out_t.op = BRANCH_LT;
+          decode_out_t.branch_op = BRANCH_LT;
         end else if (funct3 == 3'h5) begin
-          decode_out_t.op = BRANCH_GE;
+          decode_out_t.branch_op = BRANCH_GE;
         end else if (funct3 == 3'h6) begin
-          decode_out_t.op = BRANCH_LTU;
+          decode_out_t.branch_op = BRANCH_LTU;
         end else if (funct3 == 3'h7) begin
-          decode_out_t.op = BRANCH_GEU;
+          decode_out_t.branch_op = BRANCH_GEU;
         end else begin
           decode_out_t.invalid = 1;
         end
@@ -264,7 +264,7 @@ module decode (
         decode_out_t.op_src_b = OP_SRC_T_IMM;
         decode_out_t.rd_addr = rd;
         decode_out_t.imm = imm;
-        decode_out_t.op = JAL;
+        decode_out_t.branch_op = JAL;
         decode_out_t.reg_we = 1'b1;
       end
       // Type I, but jump
@@ -285,7 +285,7 @@ module decode (
         decode_out_t.rd_addr = rd;
         decode_out_t.imm = signed'(imm);
         if (funct3 == 3'h0) begin
-          decode_out_t.op = JAL_R;
+          decode_out_t.branch_op = JAL_R;
           decode_out_t.reg_we = 1'b1;
         end else begin
           decode_out_t.invalid = 1;
