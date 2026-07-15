@@ -2,6 +2,7 @@ package decode_pkg;
 
   // make more cooler
   typedef enum logic [4:0] {
+    LSU_NONE,
     LSU_LOAD_BYTE,
     LSU_LOAD_HALF,
     LSU_LOAD_WORD,
@@ -12,13 +13,14 @@ package decode_pkg;
     LSU_STORE_WORD,
 
     LUI,
-    AUIP,
+    AUIPC,
 
     ENV_CALL,
     ENV_BREAK
   } op_e;
 
-  typedef enum logic [2:0] {
+  typedef enum logic [3:0] {
+    BRANCH_NONE,
     BRANCH_EQ,
     BRANCH_NE,
     BRANCH_LT,
@@ -30,6 +32,7 @@ package decode_pkg;
   } branch_op_e;
 
   typedef enum logic [3:0] {
+    ALU_NONE,
     ALU_ADD,
     ALU_SUB,
     ALU_XOR,
@@ -43,6 +46,7 @@ package decode_pkg;
   } alu_op_e;
 
   typedef enum logic [2:0] {
+    OP_SRC_T_NONE,
     OP_SRC_T_REG,
     OP_SRC_T_IMM
   } op_src_t_e;

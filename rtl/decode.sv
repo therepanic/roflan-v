@@ -313,7 +313,7 @@ module decode (
         decode_out_t.op_src_b = OP_SRC_T_IMM;
         decode_out_t.rd_addr = rd;
         decode_out_t.imm = imm;
-        decode_out_t.op = AUIP;
+        decode_out_t.op = AUIPC;
         decode_out_t.reg_we = 1'b1;
       end
       // Type I but for ENV
