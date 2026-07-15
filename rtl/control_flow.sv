@@ -1,7 +1,7 @@
 `include "decode_pkg.sv"
 import decode_pkg::*;
 
-module branch (
+module control_flow (
     input branch_op_e op,
     input logic [31:0] rs1_data,
     input logic [31:0] rs2_data,
@@ -12,8 +12,10 @@ module branch (
 );
 
   always_comb begin
+    logic [31:0] sum;
     update_pc = 0;
     update_pc_target = 0;
+    sum = 0;
     case (op)
       BRANCH_EQ: begin
         if (rs1_data == rs2_data) begin
@@ -56,7 +58,6 @@ module branch (
         update_pc_target = pc + imm;
       end
       JAL_R: begin
-        logic [31:0] sum;
         sum = rs1_data + imm;
         update_pc = 1;
         update_pc_target = {sum[31:1], 1'b0};
