@@ -1,6 +1,5 @@
 package decode_execute_pkg;
 
-  // make more cooler
   typedef enum logic [4:0] {
     LSU_NONE,
     LSU_LOAD_BYTE,
@@ -10,14 +9,20 @@ package decode_execute_pkg;
     LSU_LOAD_HALF_U,
     LSU_STORE_BYTE,
     LSU_STORE_HALF,
-    LSU_STORE_WORD,
+    LSU_STORE_WORD
+  } lsu_op_e;
 
+  typedef enum logic [2:0] {
+    PC_NONE,
     LUI,
-    AUIPC,
+    AUIPC
+  } pc_op_e;
 
+  typedef enum logic [2:0] {
+    ENV_NONE,
     ENV_CALL,
     ENV_BREAK
-  } op_e;
+  } env_op_e;
 
   typedef enum logic [3:0] {
     BRANCH_NONE,
@@ -52,8 +57,11 @@ package decode_execute_pkg;
   } op_src_t_e;
 
   typedef struct packed {
-    op_e op;
+    logic valid;
+    lsu_op_e lsu_op;
     alu_op_e alu_op;
+    env_op_e env_op;
+    pc_op_e pc_op;
     branch_op_e branch_op;
     op_src_t_e op_src_b;
     logic [31:0] rs1_data;
@@ -63,7 +71,7 @@ package decode_execute_pkg;
     logic reg_we;
     logic mem_re;
     logic mem_we;
-    logic invalid;
+    logic [31:0] pc;
   } decode_execute_s;
 
 endpackage : decode_execute_pkg

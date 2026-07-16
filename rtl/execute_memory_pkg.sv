@@ -5,7 +5,7 @@ package execute_memory_pkg;
 
   typedef struct packed {
     logic valid;
-    op_e op;
+    lsu_op_e lsu_op;
     logic [31:0] result;
     logic [31:0] store_data;
     logic [4:0] rd_addr;

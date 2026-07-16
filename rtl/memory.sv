@@ -43,7 +43,7 @@ module memory (
       wb_cyc_o = 1'b1;
       wb_stb_o = 1'b1;
 
-      case (request_q.op)
+      case (request_q.lsu_op)
         LSU_LOAD_BYTE, LSU_LOAD_BYTE_U: begin
           wb_we_o = 1'b0;
 
@@ -141,7 +141,7 @@ module memory (
         memory_writeback.reg_we <= request_q.reg_we;
         memory_writeback.wb_data <= 32'b0;
 
-        case (request_q.op)
+        case (request_q.lsu_op)
           LSU_LOAD_BYTE: begin
             case (request_q.result[1:0])
               2'b00: memory_writeback.wb_data <= {{24{wb_dat_i[7]}}, wb_dat_i[7:0]};
@@ -184,24 +184,14 @@ module memory (
           end
         endcase
       end else if (execute_memory.valid && memory_ready) begin
-        case (execute_memory.op)
-          LSU_LOAD_BYTE,
-          LSU_LOAD_HALF,
-          LSU_LOAD_WORD,
-          LSU_LOAD_BYTE_U,
-          LSU_LOAD_HALF_U,
-          LSU_STORE_BYTE,
-          LSU_STORE_HALF,
-          LSU_STORE_WORD: begin
-            request_q <= execute_memory;
-          end
-          default: begin
-            memory_writeback.valid   <= 1'b1;
-            memory_writeback.wb_data <= execute_memory.result;
-            memory_writeback.rd_addr <= execute_memory.rd_addr;
-            memory_writeback.reg_we  <= execute_memory.reg_we;
-          end
-        endcase
+        if (execute_memory.lsu_op == LSU_NONE) begin
+          memory_writeback.valid   <= 1'b1;
+          memory_writeback.wb_data <= execute_memory.result;
+          memory_writeback.rd_addr <= execute_memory.rd_addr;
+          memory_writeback.reg_we  <= execute_memory.reg_we;
+        end else begin
+          request_q <= execute_memory;
+        end
       end
     end
   end
