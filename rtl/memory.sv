@@ -12,7 +12,6 @@ module memory (
     input execute_memory_s execute_memory,
 
     output logic memory_ready,
-    input  logic writeback_ready,
 
     output memory_writeback_s memory_writeback,
 
@@ -30,7 +29,7 @@ module memory (
   execute_memory_s request_q;
 
   always_comb begin
-    memory_ready = !request_q.valid && (!memory_writeback.valid || writeback_ready);
+    memory_ready = !request_q.valid;
 
     wb_adr_o = 32'b0;
     wb_dat_o = 32'b0;
@@ -131,7 +130,7 @@ module memory (
       request_q <= '0;
       memory_writeback <= '0;
     end else begin
-      if (memory_writeback.valid && writeback_ready) begin
+      if (memory_writeback.valid) begin
         memory_writeback.valid <= 1'b0;
       end
       if (request_q.valid && wb_ack_i) begin
@@ -197,7 +196,7 @@ module memory (
             request_q <= execute_memory;
           end
           default: begin
-            memory_writeback.valid   <= 1'b1;
+            memory_writeback.valid <= 1'b1;
             memory_writeback.wb_data <= execute_memory.result;
             memory_writeback.rd_addr <= execute_memory.rd_addr;
             memory_writeback.reg_we  <= execute_memory.reg_we;
