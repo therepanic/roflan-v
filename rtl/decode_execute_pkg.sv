@@ -1,4 +1,4 @@
-package decode_pkg;
+package decode_execute_pkg;
 
   // make more cooler
   typedef enum logic [4:0] {
@@ -64,6 +64,6 @@ package decode_pkg;
     logic mem_re;
     logic mem_we;
     logic invalid;
-  } decode_s;
+  } decode_execute_s;
 
-endpackage : decode_pkg
+endpackage : decode_execute_pkg

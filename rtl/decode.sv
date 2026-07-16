@@ -1,9 +1,9 @@
-`include "decode_pkg.sv"
-import decode_pkg::*;
+`include "decode_execute_pkg.sv"
+import decode_execute_pkg::*;
 
 module decode (
     input logic [31:0] instr,
-    output decode_s decode_out_t,
+    output decode_execute_s decode_out_t,
 
     //register_file
     output logic [ 4:0] reg_rs1_addr,

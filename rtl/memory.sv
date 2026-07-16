@@ -1,7 +1,7 @@
-`include "decode_pkg.sv"
+`include "decode_execute_pkg.sv"
 `include "execute_memory_pkg.sv"
 `include "memory_writeback_pkg.sv"
-import decode_pkg::*;
+import decode_execute_pkg::*;
 import execute_memory_pkg::*;
 import memory_writeback_pkg::*;
 
@@ -196,7 +196,7 @@ module memory (
             request_q <= execute_memory;
           end
           default: begin
-            memory_writeback.valid <= 1'b1;
+            memory_writeback.valid   <= 1'b1;
             memory_writeback.wb_data <= execute_memory.result;
             memory_writeback.rd_addr <= execute_memory.rd_addr;
             memory_writeback.reg_we  <= execute_memory.reg_we;

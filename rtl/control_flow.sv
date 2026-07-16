@@ -1,5 +1,5 @@
-`include "decode_pkg.sv"
-import decode_pkg::*;
+`include "decode_execute_pkg.sv"
+import decode_execute_pkg::*;
 
 module control_flow (
     input branch_op_e op,
