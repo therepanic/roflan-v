@@ -12,6 +12,9 @@ module execute (
     output logic execute_ready,
     output execute_memory_s execute_memory,
 
+    output logic update_pc,
+    output logic [31:0] update_pc_target,
+
     //alu
     output alu_op_e alu_op,
     output logic [31:0] alu_op_a,
@@ -19,6 +22,8 @@ module execute (
     input logic [31:0] alu_result,
 
     //control flow
+    input logic branch_update_pc,
+    input logic [31:0] branch_update_pc_target,
     output branch_op_e branch_op,
     output logic [31:0] branch_rs1_data,
     output logic [31:0] branch_rs2_data,
@@ -29,6 +34,10 @@ module execute (
   execute_memory_s req_execute_memory;
 
   assign execute_ready = !execute_memory.valid || memory_ready;
+
+  assign update_pc = branch_update_pc && decode_execute.valid && execute_ready;
+
+  assign update_pc_target = branch_update_pc_target;
 
   always_comb begin
     alu_op = ALU_NONE;
