@@ -9,7 +9,7 @@ module fetch (
     input  logic decode_ready,
     output logic fetch_ready,
 
-    //control_flowe
+    //control_flow
     input logic update_pc,
     input logic [31:0] update_pc_target,
 
