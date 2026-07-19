@@ -123,47 +123,47 @@ module decode (
           if (funct3 == 3'h0) begin
             req_decode_execute.alu_op = ALU_ADD;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.imm = signed'(imm);
+            req_decode_execute.imm = {{20{imm[11]}}, imm};
             req_decode_execute.valid = 1;
           end else if (funct3 == 3'h4) begin
             req_decode_execute.alu_op = ALU_XOR;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.imm = signed'(imm);
+            req_decode_execute.imm = {{20{imm[11]}}, imm};
             req_decode_execute.valid = 1;
           end else if (funct3 == 3'h6) begin
             req_decode_execute.alu_op = ALU_OR;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.imm = signed'(imm);
+            req_decode_execute.imm = {{20{imm[11]}}, imm};
             req_decode_execute.valid = 1;
           end else if (funct3 == 3'h7) begin
             req_decode_execute.alu_op = ALU_AND;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.imm = signed'(imm);
+            req_decode_execute.imm = {{20{imm[11]}}, imm};
             req_decode_execute.valid = 1;
           end else if (funct3 == 3'h1 && imm[11:5] == 7'h00) begin
             req_decode_execute.alu_op = ALU_SLL;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.imm = imm[4:0];
+            req_decode_execute.imm = {27'b0, imm[4:0]};
             req_decode_execute.valid = 1;
           end else if (funct3 == 3'h5 && imm[11:5] == 7'h00) begin
             req_decode_execute.alu_op = ALU_SRL;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.imm = imm[4:0];
+            req_decode_execute.imm = {27'b0, imm[4:0]};
             req_decode_execute.valid = 1;
           end else if (funct3 == 3'h5 && imm[11:5] == 7'h20) begin
             req_decode_execute.alu_op = ALU_SRA;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.imm = imm[4:0];
+            req_decode_execute.imm = {27'b0, imm[4:0]};
             req_decode_execute.valid = 1;
           end else if (funct3 == 3'h2) begin
             req_decode_execute.alu_op = ALU_SLT;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.imm = signed'(imm);
+            req_decode_execute.imm = {{20{imm[11]}}, imm};
             req_decode_execute.valid = 1;
           end else if (funct3 == 3'h3) begin
             req_decode_execute.alu_op = ALU_SLTU;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.imm = signed'(imm);
+            req_decode_execute.imm = {{20{imm[11]}}, imm};
             req_decode_execute.valid = 1;
           end
         end
@@ -183,7 +183,7 @@ module decode (
           req_decode_execute.op_src_b = OP_SRC_T_IMM;
           req_decode_execute.rs1_data = reg_rs1_data;
           req_decode_execute.rd_addr = rd;
-          req_decode_execute.imm = signed'(imm);
+          req_decode_execute.imm = {{20{imm[11]}}, imm};
           req_decode_execute.pc = fetch_decode.pc;
 
           if (funct3 == 3'h0) begin
@@ -332,7 +332,7 @@ module decode (
           req_decode_execute.op_src_b = OP_SRC_T_IMM;
           req_decode_execute.rs1_data = reg_rs1_data;
           req_decode_execute.rd_addr = rd;
-          req_decode_execute.imm = signed'(imm);
+          req_decode_execute.imm = {{20{imm[11]}}, imm};
           req_decode_execute.pc = fetch_decode.pc;
 
           if (funct3 == 3'h0) begin
@@ -350,7 +350,7 @@ module decode (
           rd = instr[11:7];
           req_decode_execute.op_src_b = OP_SRC_T_IMM;
           req_decode_execute.rd_addr = rd;
-          req_decode_execute.imm = imm;
+          req_decode_execute.imm = {12'b0, imm};
           req_decode_execute.pc_op = LUI;
           req_decode_execute.reg_we = 1'b1;
           req_decode_execute.pc = fetch_decode.pc;
@@ -364,7 +364,7 @@ module decode (
           rd = instr[11:7];
           req_decode_execute.op_src_b = OP_SRC_T_IMM;
           req_decode_execute.rd_addr = rd;
-          req_decode_execute.imm = imm;
+          req_decode_execute.imm = {12'b0, imm};
           req_decode_execute.pc_op = AUIPC;
           req_decode_execute.reg_we = 1'b1;
           req_decode_execute.pc = fetch_decode.pc;

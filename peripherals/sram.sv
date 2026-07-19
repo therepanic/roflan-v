@@ -1,6 +1,7 @@
 module sram #(
     // 5MB
     parameter int unsigned MEM_BYTES = 5 * 1024 * 1024,
+    // todo add crt0
     parameter string INIT_FILE = ""
 ) (
     input logic clk,
