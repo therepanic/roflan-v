@@ -2,6 +2,10 @@
 `include "fetch_decode_pkg.sv"
 import decode_execute_pkg::*;
 import fetch_decode_pkg::*;
+`include "execute_memory_pkg.sv"
+import execute_memory_pkg::*;
+`include "memory_writeback_pkg.sv"
+import memory_writeback_pkg::*;
 
 module decode (
     input logic clk,
@@ -15,6 +19,10 @@ module decode (
 
     output decode_execute_s decode_execute,
 
+    input execute_memory_s   execute_memory,
+    input execute_memory_s   pending_execute_memory,
+    input memory_writeback_s memory_writeback,
+
     //register_file
     output logic [ 4:0] reg_rs1_addr,
     input  logic [31:0] reg_rs1_data,
@@ -26,13 +34,29 @@ module decode (
 
   decode_execute_s req_decode_execute;
 
-  assign decode_ready = !decode_execute.valid || execute_ready;
+  logic idex_ready;
+  logic uses_rs1;
+  logic uses_rs2;
+  logic [4:0] current_rs1;
+  logic [4:0] current_rs2;
+  logic hazard_rs1;
+  logic hazard_rs2;
+  logic data_hazard;
+
+  assign idex_ready = !decode_execute.valid || execute_ready;
+  assign decode_ready = idex_ready && !data_hazard;
 
   assign instr = fetch_decode.instr;
 
   assign op = instr[6:0];
 
   always_comb begin
+    current_rs1 = instr[19:15];
+    current_rs2 = instr[24:20];
+
+    uses_rs1 = 1'b0;
+    uses_rs2 = 1'b0;
+
     req_decode_execute = '0;
     reg_rs1_addr = '0;
     reg_rs2_addr = '0;
@@ -51,6 +75,9 @@ module decode (
           funct7 = instr[31:25];
           funct3 = instr[14:12];
           rd = instr[11:7];
+
+          uses_rs1 = 1'b1;
+          uses_rs2 = 1'b1;
 
           reg_rs1_addr = rs1;
           reg_rs2_addr = rs2;
@@ -113,6 +140,8 @@ module decode (
           imm = instr[31:20];
           funct3 = instr[14:12];
           rd = instr[11:7];
+
+          uses_rs1 = 1'b1;
 
           reg_rs1_addr = rs1;
           req_decode_execute.op_src_b = OP_SRC_T_IMM;
@@ -179,6 +208,8 @@ module decode (
           funct3 = instr[14:12];
           rd = instr[11:7];
 
+          uses_rs1 = 1'b1;
+
           reg_rs1_addr = rs1;
           req_decode_execute.op_src_b = OP_SRC_T_IMM;
           req_decode_execute.rs1_data = reg_rs1_data;
@@ -228,6 +259,9 @@ module decode (
           rs1 = instr[19:15];
           rs2 = instr[24:20];
 
+          uses_rs1 = 1'b1;
+          uses_rs2 = 1'b1;
+
           reg_rs1_addr = rs1;
           reg_rs2_addr = rs2;
           req_decode_execute.op_src_b = OP_SRC_T_IMM;
@@ -267,6 +301,9 @@ module decode (
           funct3 = instr[14:12];
           rs1 = instr[19:15];
           rs2 = instr[24:20];
+
+          uses_rs1 = 1'b1;
+          uses_rs2 = 1'b1;
 
           reg_rs1_addr = rs1;
           reg_rs2_addr = rs2;
@@ -327,6 +364,8 @@ module decode (
           imm = instr[31:20];
           funct3 = instr[14:12];
           rd = instr[11:7];
+
+          uses_rs1 = 1'b1;
 
           reg_rs1_addr = rs1;
           req_decode_execute.op_src_b = OP_SRC_T_IMM;
@@ -396,13 +435,86 @@ module decode (
     end
   end
 
+  always_comb begin
+    hazard_rs1 = 1'b0;
+    hazard_rs2 = 1'b0;
+
+    if (fetch_decode.valid && req_decode_execute.valid) begin
+      if (uses_rs1) begin
+        hazard_rs1 =
+          (
+            decode_execute.valid &&
+            decode_execute.reg_we &&
+            decode_execute.rd_addr != 5'd0 &&
+            decode_execute.rd_addr == current_rs1
+          )
+          ||
+          (
+            execute_memory.valid &&
+            execute_memory.reg_we &&
+            execute_memory.rd_addr != 5'd0 &&
+            execute_memory.rd_addr == current_rs1
+          )
+          ||
+          (
+            pending_execute_memory.valid &&
+            pending_execute_memory.reg_we &&
+            pending_execute_memory.rd_addr != 5'd0 &&
+            pending_execute_memory.rd_addr == current_rs1
+          )
+          ||
+          (
+            memory_writeback.valid &&
+            memory_writeback.reg_we &&
+            memory_writeback.rd_addr != 5'd0 &&
+            memory_writeback.rd_addr == current_rs1
+          );
+      end
+
+      if (uses_rs2) begin
+        hazard_rs2 =
+          (
+            decode_execute.valid &&
+            decode_execute.reg_we &&
+            decode_execute.rd_addr != 5'd0 &&
+            decode_execute.rd_addr == current_rs2
+          )
+          ||
+          (
+            execute_memory.valid &&
+            execute_memory.reg_we &&
+            execute_memory.rd_addr != 5'd0 &&
+            execute_memory.rd_addr == current_rs2
+          )
+          ||
+          (
+            pending_execute_memory.valid &&
+            pending_execute_memory.reg_we &&
+            pending_execute_memory.rd_addr != 5'd0 &&
+            pending_execute_memory.rd_addr == current_rs2
+          )
+          ||
+          (
+            memory_writeback.valid &&
+            memory_writeback.reg_we &&
+            memory_writeback.rd_addr != 5'd0 &&
+            memory_writeback.rd_addr == current_rs2
+          );
+      end
+    end
+  end
+
+  assign data_hazard = hazard_rs1 || hazard_rs2;
+
   always_ff @(posedge clk) begin
     if (rst) begin
-      decode_execute <= 0;
-    end else begin
-      if (flush) begin
-        decode_execute.valid <= 1'b0;
-      end else if (decode_ready) begin
+      decode_execute <= '0;
+    end else if (flush) begin
+      decode_execute <= '0;
+    end else if (idex_ready) begin
+      if (data_hazard) begin
+        decode_execute <= '0;
+      end else begin
         decode_execute <= req_decode_execute;
       end
     end

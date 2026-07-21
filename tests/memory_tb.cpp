@@ -40,6 +40,12 @@ struct State {
   std::uint32_t data;
   std::uint32_t rd_addr;
   std::uint32_t reg_we;
+  std::uint32_t pending_valid;
+  std::uint32_t pending_lsu_op;
+  std::uint32_t pending_result;
+  std::uint32_t pending_store_data;
+  std::uint32_t pending_rd_addr;
+  std::uint32_t pending_reg_we;
   std::uint32_t adr;
   std::uint32_t bus_data;
   std::uint32_t sel;
@@ -89,6 +95,12 @@ public:
             dut_.writeback_data,
             static_cast<std::uint32_t>(dut_.writeback_rd_addr),
             static_cast<std::uint32_t>(dut_.writeback_reg_we),
+            static_cast<std::uint32_t>(dut_.pending_valid),
+            static_cast<std::uint32_t>(dut_.pending_lsu_op),
+            dut_.pending_result,
+            dut_.pending_store_data,
+            static_cast<std::uint32_t>(dut_.pending_rd_addr),
+            static_cast<std::uint32_t>(dut_.pending_reg_we),
             dut_.wb_adr_o,
             dut_.wb_dat_o,
             static_cast<std::uint32_t>(dut_.wb_sel_o),
@@ -146,6 +158,7 @@ public:
     check_eq(name, "wb_sel_o", 0, dut_.wb_sel_o);
     check_eq(name, "wb_adr_o", 0, dut_.wb_adr_o);
     check_eq(name, "wb_dat_o", 0, dut_.wb_dat_o);
+    check_eq(name, "pending_valid", 0, dut_.pending_valid);
     dut_.rst = 0;
     dut_.eval();
   }
@@ -161,6 +174,12 @@ public:
     check_eq(name, "wb_cyc_o", 1, dut_.wb_cyc_o);
     check_eq(name, "wb_stb_o", 1, dut_.wb_stb_o);
     check_eq(name, "wb_adr_o", address, dut_.wb_adr_o);
+    check_eq(name, "pending_valid", 1, dut_.pending_valid);
+    check_eq(name, "pending_lsu_op", operation, dut_.pending_lsu_op);
+    check_eq(name, "pending_result", address, dut_.pending_result);
+    check_eq(name, "pending_store_data", store_data, dut_.pending_store_data);
+    check_eq(name, "pending_rd_addr", rd_addr, dut_.pending_rd_addr);
+    check_eq(name, "pending_reg_we", reg_we, dut_.pending_reg_we);
   }
 
   void wait_without_ack(const std::string &name, unsigned cycles) {
@@ -176,6 +195,18 @@ public:
       check_eq(name, "wb_dat_o", request.bus_data, dut_.wb_dat_o);
       check_eq(name, "wb_sel_o", request.sel, dut_.wb_sel_o);
       check_eq(name, "wb_we_o", request.we, dut_.wb_we_o);
+      check_eq(name, "pending_valid", request.pending_valid,
+               dut_.pending_valid);
+      check_eq(name, "pending_lsu_op", request.pending_lsu_op,
+               dut_.pending_lsu_op);
+      check_eq(name, "pending_result", request.pending_result,
+               dut_.pending_result);
+      check_eq(name, "pending_store_data", request.pending_store_data,
+               dut_.pending_store_data);
+      check_eq(name, "pending_rd_addr", request.pending_rd_addr,
+               dut_.pending_rd_addr);
+      check_eq(name, "pending_reg_we", request.pending_reg_we,
+               dut_.pending_reg_we);
     }
   }
 
@@ -194,6 +225,7 @@ public:
     check_eq(name, "writeback_reg_we", reg_we, dut_.writeback_reg_we);
     check_eq(name, "wb_cyc_o", 0, dut_.wb_cyc_o);
     check_eq(name, "wb_stb_o", 0, dut_.wb_stb_o);
+    check_eq(name, "pending_valid", 0, dut_.pending_valid);
   }
 
 private:
@@ -213,6 +245,7 @@ void test_non_lsu() {
   check_eq("non-LSU single", "memory_ready", 1, dut.memory_ready);
   check_eq("non-LSU single", "wb_cyc_o", 0, dut.wb_cyc_o);
   check_eq("non-LSU single", "wb_stb_o", 0, dut.wb_stb_o);
+  check_eq("non-LSU single", "pending_valid", 0, dut.pending_valid);
 
   tb.clear_execute();
   tb.rising("non-LSU clear");
@@ -236,6 +269,7 @@ void test_non_lsu() {
   check_eq("non-LSU back-to-back B", "writeback_reg_we", 1,
            dut.writeback_reg_we);
   check_eq("non-LSU back-to-back B", "wb_cyc_o", 0, dut.wb_cyc_o);
+  check_eq("non-LSU back-to-back B", "pending_valid", 0, dut.pending_valid);
 }
 
 void run_ack_delay(unsigned delay) {
@@ -408,6 +442,7 @@ void test_reset_during_request() {
            dut.writeback_valid);
   check_eq("active request reset edge", "wb_cyc_o", 0, dut.wb_cyc_o);
   check_eq("active request reset edge", "wb_stb_o", 0, dut.wb_stb_o);
+  check_eq("active request reset edge", "pending_valid", 0, dut.pending_valid);
 }
 
 } // namespace

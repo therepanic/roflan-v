@@ -15,6 +15,8 @@ module memory (
 
     output memory_writeback_s memory_writeback,
 
+    output execute_memory_s pending_execute_memory,
+
     //wishbone interface
     output logic [31:0] wb_adr_o,
     output logic [31:0] wb_dat_o,
@@ -27,6 +29,8 @@ module memory (
 );
 
   execute_memory_s request_q;
+
+  assign pending_execute_memory = request_q;
 
   always_comb begin
     memory_ready = !request_q.valid;
