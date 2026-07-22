@@ -18,8 +18,8 @@ module register_file (
   end
 
   always_comb begin
-    rs1_data = regs[rs1_addr];
-    rs2_data = regs[rs2_addr];
+    rs1_data = rs1_addr == 5'd0 ? 32'd0 : regs[rs1_addr];
+    rs2_data = rs2_addr == 5'd0 ? 32'd0 : regs[rs2_addr];
   end
 
 endmodule
