@@ -1,4 +1,4 @@
---indentation_spaces=4
+--indentation_spaces=2
 --column_limit=100
 --port_declarations_alignment=flush-left
 --named_port_alignment=flush-left

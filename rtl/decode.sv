@@ -14,20 +14,20 @@ module decode (
     input logic flush,
     input fetch_decode_s fetch_decode,
 
-    input  logic execute_ready,
+    input logic execute_ready,
     output logic decode_ready,
 
     output decode_execute_s decode_execute,
 
-    input execute_memory_s   execute_memory,
-    input execute_memory_s   pending_execute_memory,
+    input execute_memory_s execute_memory,
+    input execute_memory_s pending_execute_memory,
     input memory_writeback_s memory_writeback,
 
     //register_file
-    output logic [ 4:0] reg_rs1_addr,
-    input  logic [31:0] reg_rs1_data,
-    output logic [ 4:0] reg_rs2_addr,
-    input  logic [31:0] reg_rs2_data
+    output logic [4:0] reg_rs1_addr,
+    input logic [31:0] reg_rs1_data,
+    output logic [4:0] reg_rs2_addr,
+    input logic [31:0] reg_rs2_data
 );
   logic [6:0] op;
   logic [31:0] instr;
@@ -90,51 +90,51 @@ module decode (
           if (funct3 == 3'h0 && funct7 == 7'h00) begin
             req_decode_execute.alu_op = ALU_ADD;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end else if (funct3 == 3'h0 && funct7 == 7'h20) begin
             req_decode_execute.alu_op = ALU_SUB;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end else if (funct3 == 3'h4 && funct7 == 7'h00) begin
             req_decode_execute.alu_op = ALU_XOR;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end else if (funct3 == 3'h6 && funct7 == 7'h00) begin
             req_decode_execute.alu_op = ALU_OR;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end else if (funct3 == 3'h7 && funct7 == 7'h00) begin
             req_decode_execute.alu_op = ALU_AND;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end else if (funct3 == 3'h1 && funct7 == 7'h00) begin
             req_decode_execute.alu_op = ALU_SLL;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end else if (funct3 == 3'h5 && funct7 == 7'h00) begin
             req_decode_execute.alu_op = ALU_SRL;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end else if (funct3 == 3'h5 && funct7 == 7'h20) begin
             req_decode_execute.alu_op = ALU_SRA;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end else if (funct3 == 3'h2 && funct7 == 7'h00) begin
             req_decode_execute.alu_op = ALU_SLT;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end else if (funct3 == 3'h3 && funct7 == 7'h00) begin
             req_decode_execute.alu_op = ALU_SLTU;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end
         end
         // Type I
         7'b0010011: begin
-          logic [ 4:0] rs1;
+          logic [4:0] rs1;
           logic [11:0] imm;
-          logic [ 2:0] funct3;
-          logic [ 4:0] rd;
+          logic [2:0] funct3;
+          logic [4:0] rd;
 
           rs1 = instr[19:15];
           imm = instr[31:20];
@@ -198,10 +198,10 @@ module decode (
         end
         // Type I
         7'b0000011: begin
-          logic [ 4:0] rs1;
+          logic [4:0] rs1;
           logic [11:0] imm;
-          logic [ 2:0] funct3;
-          logic [ 4:0] rd;
+          logic [2:0] funct3;
+          logic [4:0] rd;
 
           rs1 = instr[19:15];
           imm = instr[31:20];
@@ -221,34 +221,34 @@ module decode (
             req_decode_execute.lsu_op = LSU_LOAD_BYTE;
             req_decode_execute.mem_re = 1'b1;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end else if (funct3 == 3'h1) begin
             req_decode_execute.lsu_op = LSU_LOAD_HALF;
             req_decode_execute.mem_re = 1'b1;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end else if (funct3 == 3'h2) begin
             req_decode_execute.lsu_op = LSU_LOAD_WORD;
             req_decode_execute.mem_re = 1'b1;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end else if (funct3 == 3'h4) begin
             req_decode_execute.lsu_op = LSU_LOAD_BYTE_U;
             req_decode_execute.mem_re = 1'b1;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end else if (funct3 == 3'h5) begin
             req_decode_execute.lsu_op = LSU_LOAD_HALF_U;
             req_decode_execute.mem_re = 1'b1;
             req_decode_execute.reg_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end
         end
         // Type S
         7'b0100011: begin
-          logic [ 2:0] funct3;
-          logic [ 4:0] rs1;
-          logic [ 4:0] rs2;
+          logic [2:0] funct3;
+          logic [4:0] rs1;
+          logic [4:0] rs2;
 
           logic [31:0] imm;
           imm[4:0] = instr[11:7];
@@ -273,22 +273,22 @@ module decode (
           if (funct3 == 3'h0) begin
             req_decode_execute.lsu_op = LSU_STORE_BYTE;
             req_decode_execute.mem_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end else if (funct3 == 3'h1) begin
             req_decode_execute.lsu_op = LSU_STORE_HALF;
             req_decode_execute.mem_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end else if (funct3 == 3'h2) begin
             req_decode_execute.lsu_op = LSU_STORE_WORD;
             req_decode_execute.mem_we = 1'b1;
-            req_decode_execute.valid  = 1;
+            req_decode_execute.valid = 1;
           end
         end
         // Type B
         7'b1100011: begin
-          logic [ 2:0] funct3;
-          logic [ 4:0] rs1;
-          logic [ 4:0] rs2;
+          logic [2:0] funct3;
+          logic [4:0] rs1;
+          logic [4:0] rs2;
 
           logic [31:0] imm;
           imm[0] = 0;
@@ -336,7 +336,7 @@ module decode (
         // Type J
         7'b1101111: begin
           logic [31:0] imm;
-          logic [ 4:0] rd;
+          logic [4:0] rd;
 
           rd = instr[11:7];
           imm[0] = 0;
@@ -355,10 +355,10 @@ module decode (
         end
         // Type I, but jump
         7'b1100111: begin
-          logic [ 4:0] rs1;
+          logic [4:0] rs1;
           logic [11:0] imm;
-          logic [ 2:0] funct3;
-          logic [ 4:0] rd;
+          logic [2:0] funct3;
+          logic [4:0] rd;
 
           rs1 = instr[19:15];
           imm = instr[31:20];
@@ -383,7 +383,7 @@ module decode (
         // Type U
         7'b0110111: begin
           logic [19:0] imm;
-          logic [ 4:0] rd;
+          logic [4:0] rd;
 
           imm = instr[31:12];
           rd = instr[11:7];
@@ -397,7 +397,7 @@ module decode (
         end
         7'b0010111: begin
           logic [19:0] imm;
-          logic [ 4:0] rd;
+          logic [4:0] rd;
 
           imm = instr[31:12];
           rd = instr[11:7];
@@ -412,9 +412,9 @@ module decode (
         // Type I but for ENV
         7'b1110011: begin
           logic [11:0] imm;
-          logic [ 2:0] funct3;
-          logic [ 4:0] rs1;
-          logic [ 4:0] rd;
+          logic [2:0] funct3;
+          logic [4:0] rs1;
+          logic [4:0] rd;
 
           imm = instr[31:20];
           funct3 = instr[14:12];
