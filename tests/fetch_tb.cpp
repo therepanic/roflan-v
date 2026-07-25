@@ -12,9 +12,9 @@ namespace {
 
 std::uint32_t checks = 0;
 
-void check_eq(const std::string &test, const std::string &field,
+  void check_eq(const std::string &test, const std::string &field,
               std::uint32_t expected, std::uint32_t actual) {
-  if (expected != actual) {
+    if (expected != actual) {
     std::cerr << "FAIL " << test << '.' << field << ": expected=0x" << std::hex
               << std::setw(8) << std::setfill('0') << expected << " actual=0x"
               << std::setw(8) << actual << std::dec << '\n';
