@@ -63,7 +63,7 @@ module memory (
           wb_we_o = 1'b0;
 
           case (request_q.result[1])
-            1'b0: wb_sel_o = 4'b0011;
+            1'b0: wb_sel_o = 4'b0111;
             1'b1: wb_sel_o = 4'b1100;
           endcase
         end
