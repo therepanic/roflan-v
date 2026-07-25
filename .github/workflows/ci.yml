@@ -42,7 +42,7 @@ jobs:
             verible-verilog-format --verify --flagfile=.rules.verible_format "$file"
           done < <(find rtl peripherals tests -name '*.sv' -print0)
 
-  verilator-tests:
+  unit-and-integration-tests:
     name: Unit & Integration Tests
     runs-on: ubuntu-latest
 
