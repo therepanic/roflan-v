@@ -63,8 +63,8 @@ module sram #(
     if (rst) begin
       request_pending_1 <= 1'b0;
       request_pending_2 <= 1'b0;
-      response_data_1   <= 32'b0;
-      response_data_2   <= 32'b0;
+      response_data_1 <= 32'b0;
+      response_data_2 <= 32'b0;
     end else begin
       if (request_pending_1) begin
         request_pending_1 <= 1'b0;

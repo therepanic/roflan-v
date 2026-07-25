@@ -69,7 +69,7 @@ module memory (
         end
 
         LSU_LOAD_WORD: begin
-          wb_we_o  = 1'b0;
+          wb_we_o = 1'b0;
           wb_sel_o = 4'b1111;
         end
 
@@ -116,7 +116,7 @@ module memory (
         end
 
         LSU_STORE_WORD: begin
-          wb_we_o  = 1'b1;
+          wb_we_o = 1'b1;
           wb_sel_o = 4'b1111;
           wb_dat_o = request_q.store_data;
         end
@@ -189,10 +189,10 @@ module memory (
         endcase
       end else if (execute_memory.valid && memory_ready) begin
         if (execute_memory.lsu_op == LSU_NONE) begin
-          memory_writeback.valid   <= 1'b1;
+          memory_writeback.valid <= 1'b1;
           memory_writeback.wb_data <= execute_memory.result;
           memory_writeback.rd_addr <= execute_memory.rd_addr;
-          memory_writeback.reg_we  <= execute_memory.reg_we;
+          memory_writeback.reg_we <= execute_memory.reg_we;
         end else begin
           request_q <= execute_memory;
         end

@@ -6,7 +6,7 @@ module fetch (
     input logic rst,
     output fetch_decode_s fetch_decode,
 
-    input  logic decode_ready,
+    input logic decode_ready,
     output logic fetch_ready,
 
     //control_flow
@@ -34,7 +34,7 @@ module fetch (
     wb_adr_o = request_pc;
     wb_dat_o = '0;
     wb_sel_o = 4'b1111;
-    wb_we_o  = 1'b0;
+    wb_we_o = 1'b0;
     wb_cyc_o = request_active;
     wb_stb_o = request_active;
   end

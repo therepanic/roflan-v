@@ -1,0 +1,56 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  clang-format:
+    name: Clang Format
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install clang-format
+        run: sudo apt-get update && sudo apt-get install -y clang-format
+
+      - name: Check Clang formatting
+        run: find tests -maxdepth 1 -name '*.cpp' -print0 | xargs -0 clang-format --dry-run --Werror
+
+  verible-format:
+    name: Verible Format
+    runs-on: ubuntu-latest
+    env:
+      VERIBLE_VERSION: v0.0-4084-gf3e4d98b
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Verible
+        run: |
+          curl -fsSL "https://github.com/chipsalliance/verible/releases/download/${VERIBLE_VERSION}/verible-${VERIBLE_VERSION}-linux-static-x86_64.tar.gz" -o /tmp/verible.tar.gz
+          tar -xzf /tmp/verible.tar.gz -C /tmp
+          sudo install "/tmp/verible-${VERIBLE_VERSION}/bin/verible-verilog-format" /usr/local/bin/verible-verilog-format
+
+      - name: Check Verible formatting
+        shell: bash
+        run: |
+          while IFS= read -r -d '' file; do
+            verible-verilog-format --verify --flagfile=.rules.verible_format "$file"
+          done < <(find rtl peripherals tests -name '*.sv' -print0)
+
+  unit-and-integration-tests:
+    name: Unit & Integration Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Verilator
+        run: sudo apt-get update && sudo apt-get install verilator
+
+      - name: Run Verilator tests
+        run: bash tests/run_tests.sh

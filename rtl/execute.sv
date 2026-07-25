@@ -53,17 +53,17 @@ module execute (
     if (decode_execute.valid) begin
       req_execute_memory.lsu_op = LSU_NONE;
       if (decode_execute.alu_op != ALU_NONE) begin
-        alu_op   = decode_execute.alu_op;
+        alu_op = decode_execute.alu_op;
         alu_op_a = decode_execute.rs1_data;
         if (decode_execute.op_src_b == OP_SRC_T_IMM) begin
           alu_op_b = decode_execute.imm;
         end else if (decode_execute.op_src_b == OP_SRC_T_REG) begin
           alu_op_b = decode_execute.rs2_data;
         end
-        req_execute_memory.result  = alu_result;
+        req_execute_memory.result = alu_result;
         req_execute_memory.rd_addr = decode_execute.rd_addr;
-        req_execute_memory.reg_we  = decode_execute.reg_we;
-        req_execute_memory.valid   = 1'b1;
+        req_execute_memory.reg_we = decode_execute.reg_we;
+        req_execute_memory.valid = 1'b1;
       end else if (decode_execute.branch_op != BRANCH_NONE) begin
         branch_op = decode_execute.branch_op;
         if (decode_execute.branch_op != JAL && decode_execute.branch_op != JAL_R) begin
@@ -73,10 +73,10 @@ module execute (
           branch_rs1_data = decode_execute.rs1_data;
         end
         branch_imm = decode_execute.imm;
-        branch_pc  = decode_execute.pc;
+        branch_pc = decode_execute.pc;
         if (decode_execute.branch_op == JAL || decode_execute.branch_op == JAL_R) begin
-          req_execute_memory.result  = decode_execute.pc + 4;
-          req_execute_memory.reg_we  = decode_execute.reg_we;
+          req_execute_memory.result = decode_execute.pc + 4;
+          req_execute_memory.reg_we = decode_execute.reg_we;
           req_execute_memory.rd_addr = decode_execute.rd_addr;
         end
         req_execute_memory.valid = 1'b1;
@@ -98,7 +98,7 @@ module execute (
         req_execute_memory.valid = 1'b1;
       end else if (decode_execute.pc_op != PC_NONE) begin
         req_execute_memory.rd_addr = decode_execute.rd_addr;
-        req_execute_memory.reg_we  = decode_execute.reg_we;
+        req_execute_memory.reg_we = decode_execute.reg_we;
         if (decode_execute.pc_op == LUI) begin
           req_execute_memory.result = decode_execute.imm << 12;
         end else if (decode_execute.pc_op == AUIPC) begin
