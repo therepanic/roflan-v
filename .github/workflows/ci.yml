@@ -8,6 +8,7 @@ on:
 
 jobs:
   clang-format:
+    name: Clang Format
     runs-on: ubuntu-latest
 
     steps:
@@ -16,10 +17,11 @@ jobs:
       - name: Install clang-format
         run: sudo apt-get update && sudo apt-get install -y clang-format
 
-      - name: Check C++ formatting
+      - name: Check Clang formatting
         run: find tests -maxdepth 1 -name '*.cpp' -print0 | xargs -0 clang-format --dry-run --Werror
 
-  systemverilog-format:
+  verible-format:
+    name: Verible Format
     runs-on: ubuntu-latest
     env:
       VERIBLE_VERSION: v0.0-4084-gf3e4d98b
@@ -33,7 +35,7 @@ jobs:
           tar -xzf /tmp/verible.tar.gz -C /tmp
           sudo install "/tmp/verible-${VERIBLE_VERSION}/bin/verible-verilog-format" /usr/local/bin/verible-verilog-format
 
-      - name: Check SystemVerilog formatting
+      - name: Check Verible formatting
         shell: bash
         run: |
           while IFS= read -r -d '' file; do
@@ -41,6 +43,7 @@ jobs:
           done < <(find rtl peripherals tests -name '*.sv' -print0)
 
   verilator-tests:
+    name: Unit and Integration Tests
     runs-on: ubuntu-latest
 
     steps:
