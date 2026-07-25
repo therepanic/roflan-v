@@ -14,7 +14,7 @@ module fetch (
     input logic [31:0] update_pc_target,
 
     //wishbone interface
-    output logic [31:0] wb_adr_o,
+    output logic [ 31:0] wb_adr_o,
     output logic [31:0] wb_dat_o,
     output logic [3:0] wb_sel_o,
     output logic wb_we_o,
