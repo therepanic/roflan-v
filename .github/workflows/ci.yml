@@ -43,7 +43,7 @@ jobs:
           done < <(find rtl peripherals tests -name '*.sv' -print0)
 
   verilator-tests:
-    name: Unit and Integration Tests
+    name: Unit & Integration Tests
     runs-on: ubuntu-latest
 
     steps:
